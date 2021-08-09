@@ -1,0 +1,153 @@
+---
+title: "Readme"
+author: "Mathews Philip Venattu"
+date: "02/07/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Readme File for this Project Directory {.tabset }
+
+In this Directory there are 3 Folders and 2 files:  The Folders are : Data, Supporting Code and Thesis Report. <br />
+<br />
+<b>NB:</b>You can use the tab below to read more about each folders and the files in it. 
+<br />
+<b>NB:MOST OF THE DATASETS ARE IN ONE DRIVE:</b><br /> https://maynoothuniversity-my.sharepoint.com/:f:/r/personal/mathews_philipvenattu_2021_mumail_ie/Documents/Thesis%20(20250487)%20Dataset?csf=1&web=1&e=sFpYoH 
+<br />
+
+### Data {.tabset .tabset-pills}
+
+The `Data Folder` in this directory contains only the two initial raw datasets that were used to create Final Datasets. Newly created Datasets are of very large Size (>430 Mb) So, I am attaching a one drive link to access those datasets.
+
+#### ONE DRIVE Folder
+  
+  <a href="https://maynoothuniversity-my.sharepoint.com/:f:/r/personal/mathews_philipvenattu_2021_mumail_ie/Documents/Thesis%20(20250487)%20Dataset?csf=1&web=1&e=sFpYoH">One Drive Link To Download the Dataset</a> <br />
+  
+  In `One Drive Folder` it contains the raw datasets that i got for this project and also the datasets that I created by merging those datasets.<br/><br/>
+  <b><u>Files and its Explanations </u></b><br/>
+<ul>
+<li>`Cass_data_ksm2005.rds`: Contains the Magnetic Field measurements of Cassini Space Craft and its Positions in KSM Cordinate System</li>
+
+<li>`Full_Cassini_Master_MP_BS_CMJ_revised2005.rds` : Contains the data of the Bow Shock, Magneto Pause Events (when they occured)</li>
+
+<li>`joined_data` : It is a dataset that was created by me by joining the `Full_Cassini_Master_MP_BS_CMJ_revised2005.rds` and `Cass_data_ksm2005.rds`</li>
+
+<li>`Full_Data_Wider.rds` : It is also a derived dataset that contains all the Data points (about 49000) and 15 minutes before and after each points as columns (dimensions are 49000,210). </li>
+
+<li>`input_datasetFinal.rds` ( __Dataset 3__ ) :  Contains all the Data in `Full_Data_Wider.csv` and `Full_Data_Wider.rds` but imputed the NA values with required values and also it doesn;t contains the varibale `Timestamp`.</li>
+
+<li>`Average_SD_Data.rds` ( __Dataset 4__ ): Contains - average value of magnetic properties 15 minutes before each event, average value of magnetic properties 15 minutes after each event, standard deviation of magnetic properties 15 minutes before each event and standard deviation of magnetic properties 15 minutes after each event</li>
+
+
+</ul>
+
+
+#### Local Folder
+
+Inside `Data Folder`, it contains two datasets which were used to create other dataset that were used for model development. <br />
+
+ <b><u>Files and its Explanations </u></b><br/>
+<ul>
+
+<li>`Cass_data_ksm2005.rds`: Contains the Magnetic Field measurements of Cassini Space Craft and its Positions in KSM Cordinate System</li>
+
+<li>`Full_Cassini_Master_MP_BS_CMJ_revised2005.rds` : Contains the data of the Bow Shock, Magneto Pause Events (when they occured)</li>
+
+</ul>
+
+
+
+### Supporting Code 
+
+This project was divided into different tasks to make it more understandable. This Folder contains 8 R-script files each of them contains the Code for each task. Explanation of each file is given below. <br/><br/>
+ 
+#### 01 Data Merging Code.R
+
+Inside <b >`01 Data Merging Code.R File` </b> it contains codes that are related to merging the `Cass_data_ksm2005.rds` dataset and  `Full_Cassini_Master_MP_BS_CMJ_revised2005.rds` dataset by using `Timestamp` variable as the key. <br /><br />
+
+
+#### 02 Dataset 3 Creation Code.R
+
+Inside <b >`02 Dataset 3 Creation Code.R File` </b> it contains codes that are used to create the wider dataset `Full_Data_Wider.rds`. <br /><br />
+<b>NB:</b> It takes a good amount of time to process the complete dataset. There is a completed Dataset in One Drive `Full_Data_Wider.rds` which you can download and use it for the analysis.<br /><br />
+
+
+#### 03 Dataset 4 Creation Code.R
+Inside <b >`03 Dataset 4 Creation Code.R File` </b> it contains codes that are used to create the Average and Standard Devition dataset `Average_SD_Data.rds`. <br /><br />
+<b>NB:</b>  There is a completed Dataset available in One Drive `Average_SD_Data.rds` which you can download and use it for the analysis.<br /><br />
+
+#### 04 Exploratory Data Analysis.R
+Inside <b >`04 Exploratory Data Analysis.R File` </b> it contains all the codes that are used for the exploratory Data Analysis (Data Visualization) in this project. <br /><br />
+
+#### 05 Significance of Predictors LRM-1.R
+Inside <b >`05 Significance of Predictors LRM-1.R File` </b> it contains all the codes that are used to find the significant predictors when classifying Bowshock vs All other events by using a Logistic Regression. Different Datasets were employed to find which one performs better.  <br />
+BS as 1 and All other events as 0<br />
+<b><u>Datsets Used </u></b><br/>
+<ul>
+<li> __Dataset 3__: Full Dataset</li>
+<li> __Dataset 4__:  Average and SD dataset</li>
+<li> __Dataset 3 without Lead variables__  </li>
+
+</ul>
+<br />
+
+
+#### 06 Significance of Predictors LRM-2.R
+Inside <b >`06 Significance of Predictors LRM-2.R` </b> it contains all the codes that are used to find the significant predictors when classifying Magnetopause vs All other events by using a Logistic Regression. Different Datasets were employed to find which one performs better.  <br />
+MP as 1 and All other events as 0<br />
+<b><u>Datsets Used </u></b><br/>
+<ul>
+<li> __Dataset 3__: Full Dataset</li>
+<li> __Dataset 4__:  Average and SD dataset</li>
+<li> __Dataset 3 without Lead variables__  </li>
+
+</ul>
+<br />
+
+#### 07 Model Developed (Random Forest) Code.R
+Inside <b >`07 Model Developed (Random Forest) Code.R File` </b> it contains all the codes that are used to develop the random forest model(`ranger package`) to classify all the boundary crossings(BS,MP and NE) . Different Datasets were employed to find which one performs better.  <br />
+<b><u>Datsets Used </u></b><br/>
+<ul>
+<li> __Dataset 3__: Full Dataset</li>
+<li> __Dataset 4__:  Average and SD dataset</li>
+<li> __Dataset 3 without Lead variables__  </li>
+
+</ul>
+<br />
+
+#### 08 Model Developed (Lasso Regression) Code.R
+Inside <b >`08 Model Developed (Lasso Regression) Code.R File` </b> it contains all the codes that are used to develop the Lasso Regression model(`glmnet package`) to classify all the boundary crossings(BS,MP and NE) . Different Datasets were employed to find which one performs better.  <br />
+<b><u>Datsets Used </u></b><br/>
+<ul>
+<li> __Dataset 3__: Full Dataset</li>
+<li> __Dataset 4__:  Average and SD dataset</li>
+<li> __Dataset 3 without Lead variables__  </li>
+
+</ul>
+<br />
+
+
+### How to run this project?
+
+In order to Run this project from scratch you have to run the RScript files in the Supporting Code Folder in the order given below.
+
+<ol>
+<li> __01 Data Merging Code.R__: To merge the datasets<br /></li>
+<li> __02 Dataset 3 Creation Code.R__:  To create the Wider dataset</li>
+<li> __03 Dataset 4 Creation Code.R__:  To create the Average and SD dataset  </li>
+<li> __04 Exploratory Data Analysis.R__: For exploratory Data Analysis</li>
+<li> __05 Significance of Predictors LRM-1.R__:  To Find the significant Variables by using Logistic Regression Model 1</li>
+<li> __06 Significance of Predictors LRM-2.R__:  To Find the significant Variables by using Logistic Regression Model 2 </li>
+<li> __07 Model Developed (Random Forest) Code.R__:  Classifying the boundary crossings by using a Random Forrest Model</li>
+<li> __08 Model Developed (Lasso Regression) Code.R__:  Classifying the boundary crossings by using a Lasso Regression Model</li>
+
+</ol>
+
+### Thesis Report Files
+
+Thesis Files will be available soon.
