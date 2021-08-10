@@ -152,4 +152,8 @@ In order to Run this project from scratch you have to run the RScript files in t
 
 ### Thesis Report Files
 
-Thesis Files will be available soon.
+In this Folder it contains the pdf Version of Thesis Report and also its markdown file. There are couple of Image files that are required for the coverpage and Cassini Spacecraft Trajectory Plot image.<br />
+
+__GITHUB :__ https://github.com/matty1203/BowShockClassifier
+
+if you have any queries please contact me.
