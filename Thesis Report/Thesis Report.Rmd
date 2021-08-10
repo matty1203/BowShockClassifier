@@ -31,7 +31,7 @@ bibliography: bibliography.bib
 \bigskip                % <!-- blank lines -->
 \bigskip
 
-\textbf{Classification of bow shock and Magnetopause event positions by using the Magnetic Field properties of Saturn} % <!-- make large text -->
+\textbf{Classification of Bow shock and Magnetopause event positions by using the Magnetic field properties of Saturn} % <!-- make large text -->
 
 \bigskip                % <!-- blank lines -->
 \bigskip
@@ -53,7 +53,7 @@ degree of M.Sc. in Data Science and Analytics.}
 
 \large{Department of Mathematics and Statistics\\
 University: National University of Ireland, Maynooth.\\
-Date Submitted: 10th July, 2021}
+Date Submitted: 10th August, 2021}
 
 \end{center}              <!-- end center -->
 
@@ -338,7 +338,6 @@ From the above plot we can clearly say that the Bow Shock events are in the Oute
 It is always important to check whether the given data is balanced or not. If it is not balanced that means there is a large number of particular class and fewer data points for all other classes of data. This imbalance will makes the model that we wants to train  biased to that set of data. 
 
 \begin{center}
-\captionof{table}{Number of Datapoints in each Boundary Class }
 \begin{tabular}{|l|l|}
 \hline
 Event Class & Count\\ \hline
@@ -349,6 +348,7 @@ Bow Shock & 245  \\ \hline
 No Events Occurred  & 494127 \\ \hline
 Total &  494592   \\ \hline
 \end{tabular}
+\captionof{table}{Number of Datapoints in each Boundary Class }
 \end{center}
 
 From Table 1, it is clear that 90% of the data points are in the No Events Occurred Class and there are only very few data in the Bow shock and Magnetopause class. So a method must be adopted to prepare the training dataset for model training. Since there are only a very few data points which are in DG and SCAS class we can remove those data points because both classes gives unreliable data.
@@ -361,14 +361,13 @@ The `dirn_type` variable explains at which direction the spacecraft was moving w
 ggplot(data = raw_data_4) + geom_bar(mapping = aes(x = type_cross, fill=dirn_cross) , position = "fill")
 ```
 
-From this stacked Bar plot, we can see that 50% of both the Bow Shock and Magnetopause events are recorded during Inbound and remaining 50% during the Outbound of the Spacecraft. But for all No events Occurred class the direction of cross is Unknown. All other directions like starting from Magnetosheath, Starting from solar wind, starting from Magnetosphere etc are in SCAS and Datagap class. All datapoints with SCAS class are unreliable data and SCAS data was recorded during when the spacecraft starts with Magnetosheath and Ends with Solar wind. All the data points that were recorded when spacecraft was in the End of Magnetosheath, Starts with solar wind, End of Magnetosphere, End of Magnetosphere and starts with Magnetosphere are in Data Gap class. Since the direction of cross of all `NE` data points are Unknown or not available therefore the variable `dirn_cross` should not be used for prediction.
+From Figure 5, we can see that 50% of both the Bow Shock and Magnetopause events are recorded during Inbound and remaining 50% during the Outbound of the Spacecraft. But for all No events occurred class the direction of cross is Unknown. All other directions like starting from Magnetosheath, Starting from solar wind, starting from Magnetosphere etc are in SCAS and Datagap class. All datapoints with SCAS class are unreliable data and SCAS data was recorded during when the spacecraft starts with Magnetosheath and Ends with Solar wind. All the data points that were recorded when spacecraft was in the End of Magnetosheath, Starts with solar wind, End of Magnetosphere, End of Magnetosphere and starts with Magnetosphere are in Data Gap class. Since the direction of cross of all `NE` data points are Unknown or not available therefore the variable `dirn_cross` should not be used for prediction.
 
 \newpage
 
 # Significance of Predictors
 
-Before Model development Significance of each variable must be evaluated, so that we can remove the unnecessary variables which will leads to over fitting of models. To find the significance of variables two Logistic Regression Models were used. Logistic regression Models can be fit to the data by using the maximum likelihood technique. The `family` of the models used was set to `binomial` because we are   
-trying to classify two classes.
+Before Model development Significance of each variable must be evaluated, so that we can remove the unnecessary variables which will leads to over fitting of models. To find the significance of variables two Logistic Regression Models were used. Logistic regression Models can be fit to the data by using the maximum likelihood technique. The `family` of the models used was set to `binomial` because we are trying to classify only two classes.
 
 __Train and Test Dataset__
   
@@ -397,7 +396,6 @@ Models were trained with different derived datasets and later compared the resul
 \newpage 
 
 \begin{center}
-\captionof{table}{Logistic Regression : Bow Shock Vs Other Events Results Table}
 \begin{tabular}{|l|l|l|}
 \hline
 Dataset Used & Significant Predictors & Total Predictors\\ \hline
@@ -405,12 +403,14 @@ Dataset 3 & 218  & 218 \\ \hline
 Dataset 4 & 25  & 25 \\ \hline
 Dataset 3 without Lead Variables & 107 & 107 \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Bow Shock Vs Other Events Results Table}
+
 \end{center}
   
 
 __Summary of Dataset 3__ 
 
-From Dataset 3 we have sampled 300 NE points, 100 Bow shock data points and 100 Magnetopause data points for the train data, because there are 218 predictors in this dataset and if predictor count is nearly as big as total data points then the linear regression is too flexible and overfits the data. The Table 3 shown below is the confusion matrix of Logistic Rgression Model with Dataset 3.
+From Dataset 3, we have sampled 300 NE points, 100 Bow shock data points and 100 Magnetopause data points for the train data. Since there are 218 predictors in this dataset it is important to have more than 300 datapoints in the training dataset because  if predictor count is nearly as big as total data points then the linear regression is too flexible and it will overfits the data. Table 3 shown below is the confusion matrix of Logistic Regression Model with Dataset 3.
 
 ```{r , echo=FALSE, message=FALSE, warning=FALSE}
 copy_data<-raw_data_4
@@ -424,7 +424,6 @@ cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
 cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
 cassini.train_unscaled<-dplyr::select(cassini.train_unscaled,-id)
 ## Scaling the data
-
 cassini.train_scaled<-cassini.train_unscaled%>%mutate_if(is.numeric,scale)
 means <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), mean)
 sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), sd)
@@ -433,7 +432,6 @@ sds <- matrix(unlist(sds), ncol = 217, byrow = FALSE)
 
 ## Normalizing the TEST DATASET
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -443,11 +441,8 @@ cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
 
 ## Logistic Regression Model 1
-
 ### BS as 1 and all other events as 0
-
 ## Removing dirn_cross and creating new variable `new_trainData`.
-
 new_trainData<-dplyr::select(cassini.train_scaled,-dirn_cross)
 new_testData<-dplyr::select(cassini.test_scaled,-c(dirn_cross))
 
@@ -473,12 +468,13 @@ conf_mat_log1$table
 ```
 
 \begin{center}
-\captionof{table}{Logistic Regression - Bow Shock Vs Other Events Results Table (Dataset 3)}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Accuracy & Sensitivity & Specificity & Pos Pred Rate & Neg Pred Rate\\ \hline
 `r round(conf_mat_log1$overall['Accuracy']*100,1)` & `r round(conf_mat_log1$byClass['Sensitivity']*100,1)`  & `r round(conf_mat_log1$byClass['Specificity']*100,1)` & `r round(conf_mat_log1$byClass['Pos Pred Value']*100,3)` & `r round(conf_mat_log1$byClass['Neg Pred Value']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression - Bow Shock Vs Other Events Results Table (Dataset 3)}
+
 \end{center}
 
 
@@ -497,7 +493,6 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(100) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
@@ -510,10 +505,7 @@ means <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)),
 sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), sd)
 means <- matrix(unlist(means), ncol = 23, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 23, byrow = FALSE)
-
-
 ## Normalizing the TEST DATASET
-
 
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
 
@@ -524,18 +516,12 @@ for(col in c(1:dim(cassini.test_scaled)[2])){
 }
 cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
-
-
 ## Logistic Regression Model 1 (Average)
-
 
 new_trainData<-cassini.train_scaled
 new_testData<-cassini.test_scaled
-
 ### BS as 1 and all other events as 0
-
 ## Removing dirn_cross and creating new variable `new_trainData`.
-
 #### Training Data
 
 cassini.logTrain<-new_trainData%>%mutate(event_occured=ifelse(type_cross=='NE'|type_cross=='MP',0,1))
@@ -543,13 +529,11 @@ cassini.logTrain$event_occured<-as.factor(cassini.logTrain$event_occured)
 cassini.logTrain <- dplyr::select(cassini.logTrain,-c(type_cross))
 
 #### Test Data
-
 cassini.logTest<-new_testData%>%mutate(event_occured=ifelse(type_cross=='NE'|type_cross=='MP',0,1))
 cassini.logTest$event_occured<-as.factor(cassini.logTest$event_occured)
 cassini.logTest <- dplyr::select(cassini.logTest,-c(type_cross))
 
 #### Model 1 Training and Confusion Matrix
-
 LOGModel2<- glm(event_occured ~ ., family = "binomial", data = cassini.logTrain)
 cassini.logTest$prob=predict(LOGModel2,cassini.logTest,type="response")
 cassini.logTest$pred <- factor(ifelse(cassini.logTest$prob < .8, 0,1))
@@ -557,20 +541,20 @@ conf_mat_log2<-confusionMatrix(cassini.logTest$pred, cassini.logTest$event_occur
 conf_mat_log2$table
 ```
 \begin{center}
-\captionof{table}{Logistic Regression : Bow Shock Vs Other Events Results Table (Dataset 4)}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Accuracy & Sensitivity & Specificity & Pos Pred Rate & Neg Pred Rate\\ \hline
 `r round(conf_mat_log2$overall['Accuracy']*100,1)` & `r round(conf_mat_log2$byClass['Sensitivity']*100,1)`  & `r round(conf_mat_log2$byClass['Specificity']*100,1)` & `r round(conf_mat_log2$byClass['Pos Pred Value']*100,3)` & `r round(conf_mat_log2$byClass['Neg Pred Value']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Bow Shock Vs Other Events Results Table (Dataset 4)}
 \end{center}
 
-From Table 4, we can clearly see that the accuracy is about `r round(conf_mat_log2$overall['Accuracy']*100,1)`% . Eventhough it gives better accuracy than the Model with Dataset 3 but still the sensitivity of the Model is similar to that of the Dataset 3 Logistic Regression Model. `r round(conf_mat_log2$byClass['Sensitivity']*100,1)`% of the Bow Shock boundaries were classified correctly. But when compared to Model that was trained with Dataset 3, The `NE` points were classified more accurately in this model.The specificity of this model is `r round(conf_mat_log2$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log2$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
+From Table 4, we can clearly see that the accuracy is about `r round(conf_mat_log2$overall['Accuracy']*100,1)`% . Eventhough it gives better accuracy than the Model with Dataset 3 but still the sensitivity of the Model is similar to that of the Model with Dataset 3. `r round(conf_mat_log2$byClass['Sensitivity']*100,1)`% of the Bow Shock boundaries were classified correctly. When compared to model that was trained with Dataset 3, the `NE` points were classified more accurately in this model.The specificity of this model is `r round(conf_mat_log2$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log2$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
 
 
 __Summary of Dataset 3 : Without Lead Variables__ 
 
-In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points which was sampled from the Dataset 4. The table Shown below is the Confusion matrix of the model with this dataset. Without LEad variable means all the columns which contains the magnetic field information after 15 minutes of a particular datapoint.
+In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points which was sampled from the Dataset 4. Table 5 shown below is the Confusion matrix of the model that is trained with Dataset 3(without lead variables). A dataset without Lead variables means all the columns which contains only the magnetic field information before 15 minutes of each datapoint.
 
 ```{r , echo=FALSE, message=FALSE,warning=FALSE}
 copy_data<-raw_data_4[,1:107]
@@ -578,26 +562,21 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(100) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
 cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
 cassini.train_unscaled<-dplyr::select(cassini.train_unscaled,-id)
 ## Scaling the data
-
 cassini.train_scaled<-cassini.train_unscaled%>%mutate_if(is.numeric,scale)
 means <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), mean)
 sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), sd)
 means <- matrix(unlist(means), ncol = 107, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 107, byrow = FALSE)
 
-
 ## Normalizing the TEST DATASET
 
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -609,12 +588,10 @@ cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
 
 ## Logistic Regression Model 1 (Average)
 
-
 new_trainData<-cassini.train_scaled
 new_testData<-cassini.test_scaled
 
 ### BS as 1 and all other events as 0
-
 ## Removing dirn_cross and creating new variable `new_trainData`.
 
 #### Training Data
@@ -638,26 +615,25 @@ conf_mat_log3<-confusionMatrix(cassini.logTest$pred, cassini.logTest$event_occur
 conf_mat_log3$table
 ```
 \begin{center}
-\captionof{table}{Logistic Regression : Bow Shock Vs Other Events Results Table (Dataset 3 without Lead variables)}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Accuracy & Sensitivity & Specificity & Pos Pred Rate & Neg Pred Rate\\ \hline
 `r round(conf_mat_log2$overall['Accuracy']*100,1)` & `r round(conf_mat_log3$byClass['Sensitivity']*100,1)`  & `r round(conf_mat_log3$byClass['Specificity']*100,1)` & `r round(conf_mat_log3$byClass['Pos Pred Value']*100,3)` & `r round(conf_mat_log3$byClass['Neg Pred Value']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Bow Shock Vs Other Events Results Table (Dataset 3 without Lead variables)}
 \end{center}
 
-From Table 5, we can clearly see that the accuracy is about `r round(conf_mat_log3$overall['Accuracy']*100,1)`% . It gives better accuracy and sensitivity than the Model with the Dataset 3 Logistic Regression Model. `r round(conf_mat_log3$byClass['Sensitivity']*100,1)`% of the Bow Shock boundaries were classified correctly. But when compared to Model that was trained with Dataset 3, All other Classes except Bow Shock  were classified more accurately in this model.The specificity of this model is `r round(conf_mat_log3$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log3$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
+From Table 5, we can clearly see that the accuracy is about `r round(conf_mat_log3$overall['Accuracy']*100,1)`% . It gives better accuracy and sensitivity than the Model trained with the Dataset 3. `r round(conf_mat_log3$byClass['Sensitivity']*100,1)`% of the Bow Shock boundaries were classified correctly. But when compared to Model that was trained with Dataset 3, non Bow shock Classes were classified more accurately in this model.The specificity of this model is `r round(conf_mat_log3$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log3$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
 
 ## Logistic Regression Model 2: Magnetopause vs Other Events
 
-Unlike the previous model which classifies Bow Shock events and All other Events, This model classify Magnetopause and all other events by using different derived datasets. Since the datasets are highly imbalanced It is important to sample equal number of classes from datasets to train the Logistic Regression model. Before splitting into training and Test Dataset, A new variable called `event_occured` was created and all Magnetopause events were stored as 1 and all the rest of the events as 0 in that newly created variable.
+Unlike the previous model which classifies Bow Shock events from all other Events, This model classify Magnetopause event from rest of the events by using different derived datasets. Since the datasets are highly imbalanced It is important to sample equal number of classes from each dataset to train different Logistic Regression model. Before splitting into training and Test Dataset, A new variable called `event_occured` was created and all Magnetopause events were stored as 1 and all the rest of the events as 0 in that newly created variable.
 
 ### Results
 
-Models were trained with different derived datasets and later compared the results.Table 6 contains the information regarding the datasets used and count of Variables that are significant. A brief summary of models trained with different dataset was explained in the coming pages.
+Logistic Regression models were trained with different derived datasets and later the results of each model was compared .Table 6 contains the information regarding the datasets used and count of Variables that are significant. A brief summary of models trained with different dataset was explained in this section.
 
 \begin{center}
-\captionof{table}{Logistic Regression : Magnetopause Vs Other Events Results Table}
 \begin{tabular}{|l|l|l|}
 \hline
 Dataset Used & Significant Predictors & Total Predictors\\ \hline
@@ -665,13 +641,14 @@ Dataset 3 & 218  & 218 \\ \hline
 Dataset 4 & 25  & 25 \\ \hline
 Dataset 3 without Lead Variables & 107 & 107 \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Magnetopause Vs Other Events Results Table}
 \end{center}
 
 
 
 __Summary of Dataset 3__ 
 
-From Dataset 3  I have sampled 300 NE points, 100 Bow shock data points and 100 Magnetopause Data points for the train data because there are 218 predictors in this dataset and If predictor count is nearly as big as total data points then the linear regression is too flexible and overfits the data.The Table shown below is the confusion matrix.
+From Dataset 3, I have sampled 300 NE points, 100 Bow shock points and 100 Magnetopause Data points as the train data.Since there are 218 predictors in this dataset it is crucial to have more than 300 dtapoints in the train dataset. If predictor count is nearly as big as total data points then the linear regression is too flexible and overfits the data.Table 7 shown below is the confusion matrix of this model.
 
 ```{r , echo=FALSE, message=FALSE, warning=FALSE}
 copy_data<-raw_data_4
@@ -679,21 +656,13 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(300) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
-
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
 cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
 cassini.train_unscaled<-dplyr::select(cassini.train_unscaled,-id)
 
-
-
-
-
 ## Scaling the data
-
 cassini.train_scaled<-cassini.train_unscaled%>%mutate_if(is.numeric,scale)
 means <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), mean)
 sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), sd)
@@ -702,10 +671,7 @@ sds <- matrix(unlist(sds), ncol = 217, byrow = FALSE)
 
 
 ## Normalizing the TEST DATASET
-
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -749,12 +715,13 @@ conf_mat_log4$table
 ```
 
 \begin{center}
-\captionof{table}{Logistic Regression : Magneto Pause Vs Other Events Results Table (Dataset 3)}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Accuracy & Sensitivity & Specificity & Pos Pred Rate & Neg Pred Rate\\ \hline
 `r round(conf_mat_log4$overall['Accuracy']*100,1)` & `r round(conf_mat_log4$byClass['Sensitivity']*100,1)`  & `r round(conf_mat_log4$byClass['Specificity']*100,1)` & `r round(conf_mat_log4$byClass['Pos Pred Value']*100,3)` & `r round(conf_mat_log4$byClass['Neg Pred Value']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Magneto Pause Vs Other Events Results Table (Dataset 3)}
+
 \end{center}
 
 From Table 7, we can clearly see that the accuracy is about `r round(conf_mat_log4$overall['Accuracy']*100,1)`% . Eventhough it gives a better accuracy value the sensitivity of the Model is very low. Accuracy is the percentage of datapoints that are classified correctly but in the case of the Sensitivity which is number of exact positive predictions divided by the total number of positive in this model the sensitivity gives a value that explains about Bow Shock events that are correctly classified .   `r round(conf_mat_log4$byClass['Sensitivity'] * 100,1)`% is the sensitivity of the above model So, `r round(conf_mat_log4$byClass['Sensitivity'] * 100)` out of 100 Bow Shock events were classified correctly through this model. When Comparing with the Logistic Regression Model that was used for Classifying the Bow Shock and Rest of the Events, this Logistic regression model was able to classify the Magnetopause events more efficiently by using Dataset 3.
@@ -773,9 +740,7 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(100) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
-
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
 cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
@@ -788,12 +753,8 @@ sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), s
 means <- matrix(unlist(means), ncol = 23, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 23, byrow = FALSE)
 
-
 ## Normalizing the TEST DATASET
-
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -802,31 +763,23 @@ for(col in c(1:dim(cassini.test_scaled)[2])){
 cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
 
-
 ## Logistic Regression Model 1 (Average)
-
-
 new_trainData<-cassini.train_scaled
 new_testData<-cassini.test_scaled
 
 ### MP as 1 and all other events as 0
-
 ## Removing dirn_cross and creating new variable `new_trainData`.
-
 #### Training Data
-
 cassini.logTrain<-new_trainData%>%mutate(event_occured=ifelse(type_cross=='NE'|type_cross=='BS',0,1))
 cassini.logTrain$event_occured<-as.factor(cassini.logTrain$event_occured)
 cassini.logTrain <- dplyr::select(cassini.logTrain,-c(type_cross))
 
 #### Test Data
-
 cassini.logTest<-new_testData%>%mutate(event_occured=ifelse(type_cross=='NE'|type_cross=='BS',0,1))
 cassini.logTest$event_occured<-as.factor(cassini.logTest$event_occured)
 cassini.logTest <- dplyr::select(cassini.logTest,-c(type_cross))
 
 #### Model 1 Training and Confusion Matrix
-
 LOGModel2<- glm(event_occured ~ ., family = "binomial", data = cassini.logTrain)
 cassini.logTest$prob=predict(LOGModel2,cassini.logTest,type="response")
 cassini.logTest$pred <- factor(ifelse(cassini.logTest$prob < .8, 0,1))
@@ -834,19 +787,20 @@ conf_mat_log5<-confusionMatrix(cassini.logTest$pred, cassini.logTest$event_occur
 conf_mat_log5$table
 ```
 \begin{center}
-\captionof{table}{Logistic Regression : Magneto Pause Vs Other Events Results Table (Dataset 4)}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Accuracy & Sensitivity & Specificity & Pos Pred Rate & Neg Pred Rate\\ \hline
 `r round(conf_mat_log5$overall['Accuracy']*100,1)` & `r round(conf_mat_log5$byClass['Sensitivity']*100,1)`  & `r round(conf_mat_log5$byClass['Specificity']*100,1)` & `r round(conf_mat_log5$byClass['Pos Pred Value']*100,3)` & `r round(conf_mat_log5$byClass['Neg Pred Value']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Magneto Pause Vs Other Events Results Table (Dataset 4)}
+
 \end{center}
-From Table 8, we can clearly see that the accuracy is about `r round(conf_mat_log5$overall['Accuracy']*100,1)`% . Eventhough it gives better accuracy than the Model above with Dataset 3 but still the sensitivity of the Model is similar to that of  Logistic Regression Model which classifies Magnetopause Events by using the Dataset3.  `r round(conf_mat_log5$byClass['Sensitivity']*100,1)`% of the Bow Shock boundaries were classified correctly. But when compared to Model that was trained with Dataset 3, The `NE` points were classified more accurately in this model.The specificity of this model is `r round(conf_mat_log5$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log5$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
+From Table 8, we can clearly see that the accuracy is about `r round(conf_mat_log5$overall['Accuracy']*100,1)`% . When comparing with the model that was trained with Dataset 3, this model did a vary good job in classifying the Magneto pause events. `r round(conf_mat_log5$byClass['Sensitivity']*100,1)`% of the Magnetopause boundaries were classified correctly. The `NE` points were also classified more accurately in this model.The specificity of this model is `r round(conf_mat_log5$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log5$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
 
 
 __Summary of Dataset 3 : Without Lead Variables__ 
 
-In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points from the Dataset 4. The table Shown below is the Confusion matrix of the model with this dataset.
+In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points from the Dataset 4. Table 9 Shown below is the Confusion matrix of the model with this dataset.
 
 ```{r , echo=FALSE, message=FALSE,warning=FALSE}
 
@@ -918,23 +872,23 @@ conf_mat_log6$table
 ```
 
 \begin{center}
-\captionof{table}{Logistic Regression : Magneto Pause Vs Other Events Results Table (Dataset 3 without Lead Variables)}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Accuracy & Sensitivity & Specificity & Pos Pred Rate & Neg Pred Rate\\ \hline
 `r round(conf_mat_log6$overall['Accuracy']*100,1)` & `r round(conf_mat_log6$byClass['Sensitivity']*100,1)`  & `r round(conf_mat_log6$byClass['Specificity']*100,1)` & `r round(conf_mat_log6$byClass['Pos Pred Value']*100,3)` & `r round(conf_mat_log6$byClass['Neg Pred Value']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Logistic Regression : Magneto Pause Vs Other Events Results Table (Dataset 3 without Lead Variables)}
+
 \end{center}
 
 
-From Table 9, we can clearly see that the accuracy is about `r round(conf_mat_log6$overall['Accuracy']*100,1)`% . It gives better accuracy and sensitivity than the Model with the Dataset 3 Logistic Regression Model. `r round(conf_mat_log6$byClass['Sensitivity']*100,1)`% of the Bow Shock boundaries were classified correctly. But when compared to Model that was trained with Dataset 3, All other Classes except Bow Shock  were classified more accurately in this model.The specificity of this model is `r round(conf_mat_log6$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log6$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
+From Table 9, we can clearly see that the accuracy is about `r round(conf_mat_log6$overall['Accuracy']*100,1)`% . It gives better accuracy and sensitivity than the Model with the Dataset 3 but less when compared to model with Dataset 4. `r round(conf_mat_log6$byClass['Sensitivity']*100,1)`% of the Magnetopause boundaries were classified correctly.The specificity of this model is `r round(conf_mat_log6$byClass['Specificity']*100,1)`% which means the `r round(conf_mat_log6$byClass['Specificity']*100,1)`% of the NE Points were classified correctly through this model.
 
 ## Conclusion
 
 Based on summary table of each model that was trained with different datasets we can say that all the variables are significant. Table 10 shown below explains the overall results obtained from different models.
 
 \begin{center}
-\captionof{table}{Overall Results: Significance of Predictors}
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
 Model Used & Dataset Used & Significant Predictors & Accuracy & Sensitivity\\ \hline
@@ -945,15 +899,16 @@ LR Model 2 & Dataset 3 & 218   & `r round(conf_mat_log4$overall['Accuracy']*100,
 LR Model 2 & Dataset 4 & 25   & `r round(conf_mat_log5$overall['Accuracy']*100,1)` & `r round(conf_mat_log5$byClass['Sensitivity']*100,1)`\\ \hline
 LR Model 2 & Dataset 3 without Lead Variables & 107  & `r round(conf_mat_log6$overall['Accuracy']*100,1)` &`r round(conf_mat_log6$byClass['Sensitivity']*100,1)` \\ \hline
 \end{tabular}
+\captionof{table}{Overall Results: Significance of Predictors}
+
 \end{center}
 
-
-In Table 10 , LR Model 1 represents the Logistic Regression Model that classifies Bow Shock Events from all other events and LR Model 2 represents the Logistic Regression Model that classifies Magneto Pause events from all other events. From the table we can conclude that the Models that were trained with Dataset 4 and Dataset 3 (without Lead Variables) performed better.
+In Table 10 , LR Model 1 represents the Logistic Regression Model that classifies Bow Shock Events from all other events and LR Model 2 represents the Logistic Regression Model that classifies Magneto Pause events from all other events. From the table we can conclude that the Models that were trained with Dataset 4 and Dataset 3 (without Lead Variables) performed better than the model that is trained with Dataset 3 .
 \newpage
 
 # Classification Model Development
 
-This section explains about the Model that was Developed for the classification of different Boundaries based on the Magnetometer data and the analysis that were done before. In the Predictor Significance section we found that Dataset 4(Average Dataset) and Dataset 3(without lEad variables) performed better when compared to the other datasets. In this section we will compare the results of Models trained with different datasets and conclude which model can be used to address the problem statement. The model with high sensitivity value and accuracy will be considered as the Best Model. Because sensitivity value of each class will tell us the percentage of each class that was correctly classified. Several Methods can be used for classifying the boundaries by using these kind of datasets, but in this project we are going to use Random forest model and Lasso regression Model.
+This section explains about the model that was developed for the classification of different boundaries based on the Magnetometer data. In the Predictor Significance section, we found that Dataset 4(Average Dataset) and Dataset 3(without lead variables) performed better when compared to  Dataset 3. The results of classification models that were trained with different datasets was explained  in this section and based on results a final  model will be selected that can be used to address the problem statement. The model with high sensitivity values and  better accuracy will be considered as the best Model. Because sensitivity value of each class will tell us the percentage of each correctly classified category . Several methods can be used for classifying the boundaries by using these kind of datasets, but in this project we have used Random forest model and Lasso regression Model.
 
 ## Random Forest Model 
 
@@ -976,7 +931,7 @@ In this project i have used the `ranger` (@wright2018package) package because it
 
 __Summary of Dataset 3__ 
 
-From Dataset 3  I have sampled 300 NE points, 100 Bow shock data points and 100 Magnetopause Data points for the train data because there are 218 predictors in this dataset and If predictor count is nearly as big as total data points then the model becomes too flexible and overfits the data. Confusion Matrix of the Model is shown below.
+From Dataset 3  I have sampled 300 NE points, 100 Bow shock data points and 100 Magnetopause Data points for the train data because there are 218 predictors in this dataset and If predictor count is nearly as big as total data points then the model becomes too flexible and overfits the data. Confusion Matrix of the model is shown below.
 
 ```{r , echo=FALSE, message=FALSE, warning=FALSE}
 copy_data<-raw_data_4
@@ -984,19 +939,11 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t[!is.na(t$X_KSM16), ]
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-  
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(300) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
-
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
 cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
 cassini.train_unscaled<-dplyr::select(cassini.train_unscaled,-id)
-
-
-
-
-
 ## Scaling the data
 
 cassini.train_scaled<-cassini.train_unscaled%>%mutate_if(is.numeric,scale)
@@ -1006,9 +953,7 @@ means <- matrix(unlist(means), ncol = 217, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 217, byrow = FALSE)
 ## Normalizing the TEST DATASET
 
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -1017,13 +962,10 @@ for(col in c(1:dim(cassini.test_scaled)[2])){
 cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 
 ## Removing dirn_cross and creating new variable `new_trainData`.
-
 new_trainData<-dplyr::select(cassini.train_scaled,-dirn_cross)
 new_testData<-cassini.test_scaled
 
-
-#### Random Forrest Model Training and Confusion Matrix
-
+#### Random forest Model Training and Confusion Matrix
 cassini.rfmodel1 <- ranger(type_cross ~ ., data = new_trainData)
 new_testData$pred<-predict(cassini.rfmodel1,data = new_testData)$predictions
 conf_mat.rfmodel1<-confusionMatrix(new_testData$pred, new_testData$type_cross)
@@ -1032,13 +974,13 @@ conf_mat.rfmodel1
 
 
 
-The accuracy of the Random Forest Model with Dataset 3 is about `r round(conf_mat.rfmodel1$overall['Accuracy']*100,1)`% . But when it comes to the sensitivity of each class which is `r round(conf_mat.rfmodel1$byClass['Class: BS','Specificity']*100,3)`% , `r round(conf_mat.rfmodel1$byClass['Class: MP','Specificity']*100,3)`%  and `r round(conf_mat.rfmodel1$byClass['Class: NE','Specificity']*100,3)`% for the Bow Shock, Magnetopause and No Events occurred Class respectively. Among these values the sensitivity of the Bow Shock and Magnetopause class is very low.
+The accuracy of the Random Forest Model with Dataset 3 is about `r round(conf_mat.rfmodel1$overall['Accuracy']*100,1)`% . The sensitivity value for each class which is `r round(conf_mat.rfmodel1$byClass['Class: BS','Sensitivity']*100,3)`% , `r round(conf_mat.rfmodel1$byClass['Class: MP','Sensitivity']*100,3)`%  and `r round(conf_mat.rfmodel1$byClass['Class: NE','Sensitivity']*100,3)`% for the Bow Shock, Magnetopause and No Events occurred Class respectively. Among these values the sensitivity of the Bow Shock and Magnetopause class is very low.
 
 
 
 __Summary of Dataset 4 : Average and Standard Deviation Data__ 
 
-In the case of this dataset there are only 24 predictors so, 100 NE points, 100 BS Points and 100 MP points were sampled  from the Dataset 4. The table Shown below is the Confusion matrix of the model with this dataset.
+This dataset contains only 24 predictors so, 100 NE points, 100 BS Points and 100 MP points were sampled from the Dataset 4. The table shown below is the Confusion matrix of the model with this dataset.
 
 ```{r , echo=FALSE, message=FALSE,warning=FALSE}
 
@@ -1087,22 +1029,19 @@ conf_mat.rfmodel2<-confusionMatrix(new_testData$pred, new_testData$type_cross)
 conf_mat.rfmodel2
 ```
 
-From the matrix we can clearly see that the accuracy is about `r round(conf_mat.rfmodel2$overall['Accuracy']*100,3)`% .`r round(conf_mat.rfmodel2$byClass['Class: BS','Specificity']*100,3)`% of the Bow Shock boundaries and `r round(conf_mat.rfmodel2$byClass['Class: MP','Specificity']*100,3)` % of Magnetopause boundaries were classified correctly through this model. 
+From the matrix we can clearly see that the accuracy is about `r round(conf_mat.rfmodel2$overall['Accuracy']*100,3)`% .`r round(conf_mat.rfmodel2$byClass['Class: BS','Sensitivity']*100,3)`% of the Bow Shock boundaries and `r round(conf_mat.rfmodel2$byClass['Class: MP','Sensitivity']*100,3)` % of Magnetopause boundaries were classified correctly through this model. 
 
 
 __Summary of Dataset 3 : Without Lead Variables__ 
 
-In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points from the Dataset 3. The table Shown below is the Confusion matrix of the model with this dataset.
+In this dataset there are only 107 predictors which means half of the variables were removed so, 100 NE points, 100 BS Points and 100 MP points were sampled from the Dataset 3 as the training data. The table shown below is the Confusion matrix of the model with this dataset.
 
 ```{r , echo=FALSE, message=FALSE,warning=FALSE}
-
-
 copy_data<-raw_data_4[,1:107]
 t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(100) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
@@ -1116,12 +1055,8 @@ sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), s
 means <- matrix(unlist(means), ncol = 107, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 107, byrow = FALSE)
 
-
 ## Normalizing the TEST DATASET
-
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -1133,14 +1068,15 @@ new_trainData<-dplyr::select(cassini.train_scaled,-dirn_cross)
 new_testData<-dplyr::select(cassini.test_scaled,-dirn_cross)
 
 ## Removing dirn_cross and creating new variable `new_trainData`.
-
 #### Model 1 Training and Confusion Matrix
-
 cassini.rfmodel3 <- ranger(type_cross ~ ., data = new_trainData,num.trees = 500,importance = 'impurity')
 new_testData$pred<-predict(cassini.rfmodel3,data = new_testData)$predictions
 conf_mat.rfmodel3<-confusionMatrix(new_testData$pred, new_testData$type_cross)
 conf_mat.rfmodel3
 ```
+
+
+This model performed better in classifying Magnetopause and Bow shock events when compared to other random forest models that were trained with Dataset 3 and Dataset 4. The sensitivity of bow shock and magnetopause events are `r round(conf_mat.rfmodel3$byClass['Class: BS','Sensitivity']*100,3)` % and `r round(conf_mat.rfmodel3$byClass['Class: MP','Sensitivity']*100,3)` % respectively. But the overall accuracy is still very low which is only `r round(conf_mat.rfmodel3$overall['Accuracy']*100,3)`%.    
 
 ## Lasso Regression Model 
 
@@ -1159,8 +1095,6 @@ In this project i have used the `glmnet()` (@friedman2021package) package for im
   
   Like we discussed in Section 5 the dataset is a highly imbalanced one with 90% of the data has the class `No Events Occurred`. It is important to train the model with a balanced dataset so, for that we sampled 100 datapoints of each class by using `sample_n()` function for Dataset 4.Both the train and test dataset was standardized by using the same technique that was discussed in section 6. A new variable `event_occured` is introduced in the dataset which is a numerical representation of classes. All the Bow Shock, Magneto pause and No Events occurred classes were encoded by the numbers 1,2 and 0 respectively.
 
-\newpage
-
 ### Results 
 
 __Summary of Dataset 3__ 
@@ -1173,9 +1107,6 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t[!is.na(t$X_KSM16), ]
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-  
-
-
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(150) %>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
@@ -1190,12 +1121,8 @@ sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), s
 means <- matrix(unlist(means), ncol = 218, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 218, byrow = FALSE)
 
-
 ## Normalizing the TEST DATASET
-
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -1203,12 +1130,9 @@ for(col in c(1:dim(cassini.test_scaled)[2])){
 }
 cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
-
-
 cassini.train_scaled<-cassini.train_scaled%>%mutate(event_occured=ifelse(type_cross=='NE',0,ifelse(type_cross=='BS',1,ifelse(type_cross=='MP',2,0))))
 cassini.train_scaled$event_occured<-as.factor(cassini.train_scaled$event_occured)
 cassini.train_scaled <- dplyr::select(cassini.train_scaled,-c(type_cross,dirn_cross))
-
 cassini.test_scaled<-cassini.test_scaled%>%mutate(event_occured=ifelse(type_cross=='NE',0,ifelse(type_cross=='BS',1,ifelse(type_cross=='MP',2,0))))
 cassini.test_scaled$event_occured<-as.factor(cassini.test_scaled$event_occured)
 cassini.test_scaled <- dplyr::select(cassini.test_scaled,-c(type_cross,dirn_cross))
@@ -1219,34 +1143,28 @@ x_tr<-as.matrix(dplyr::select(cassini.train_scaled,-event_occured))
 y_tr<-as.matrix(dplyr::select(cassini.train_scaled,event_occured))
 x_te<-as.matrix(dplyr::select(cassini.test_scaled,-event_occured))
 y_te<-as.matrix(dplyr::select(cassini.test_scaled,event_occured))
-
 lambdas <- 10^seq(2, -3, by = -.1)
-
 lasso_reg <- lasso_reg <- cv.glmnet(x_tr, y_tr, alpha = 1, lambda = lambdas, nfolds = 5, family="multinomial")
 
 # Best 
 lambda_best <- lasso_reg$lambda.min 
 
 ###Lasso
-
 lasso_model <- glmnet(x_tr, y_tr, alpha = 1, lambda = lambda_best, family="multinomial")
 predictions_train <- predict(lasso_model, s = lambda_best, newx = x_tr,type="class")
-#eval_results(y_train, predictions_train, train)
-
 predictions_test <- predict(lasso_model, s = lambda_best, newx = x_te,type="class")
 conf_mat.lsmodel1<-confusionMatrix(table(predictions_test,y_te))
 conf_mat.lsmodel1
 
 ```
 
-The accuracy of the Lasso Regression Model with Dataset 3 is about `r round(conf_mat.lsmodel1$overall['Accuracy']*100,1)`% . The sensitivity of each class is `r round(conf_mat.lsmodel1$byClass['Class: 1','Sensitivity']*100,3)`% , `r round(conf_mat.lsmodel1$byClass['Class: 2','Sensitivity']*100,3)`%  and `r round(conf_mat.lsmodel1$byClass['Class: 0','Sensitivity']*100,3)`% for the Bow Shock, Magnetopause and No Events occurred Class respectively. Among these values the sensitivity of the Bow Shock and Magnetopause class is very low.  The Classes 0,1 and 2 in the confusion matrix is actually representing the `NE`,`BS` and `MP` events. 
+The accuracy of the Lasso Regression Model with Dataset 3 is about `r round(conf_mat.lsmodel1$overall['Accuracy']*100,1)`% . The sensitivity values are `r round(conf_mat.lsmodel1$byClass['Class: 1','Sensitivity']*100,3)`% , `r round(conf_mat.lsmodel1$byClass['Class: 2','Sensitivity']*100,3)`%  and `r round(conf_mat.lsmodel1$byClass['Class: 0','Sensitivity']*100,3)`% for the Bow Shock, Magnetopause and No Events classes respectively. Among these values the sensitivity of the Bow Shock and Magnetopause class is very low which means this model failed to classify majority of the events correctly.  The Classes 0,1 and 2 in the confusion matrix is actually representing the `NE`,`BS` and `MP` events. 
 
 \newpage
 
 __Summary of Dataset 4 : Average and Standard Deviation Data__ 
 
 In the case of this dataset there are only 24 predictors so,  100 NE points, 100 BS Points and 100 MP points were sampled  from the Dataset 4. The table Shown below is the Confusion matrix of the model with this dataset.
-
 
 ```{r , echo=FALSE, message=FALSE, warning=FALSE}
 data_avg<-readRDS("./Data/dataset_version_2/Average_SD_Data.rds", refhook = NULL)
@@ -1255,7 +1173,6 @@ t<-copy_data[!(copy_data$type_cross=="DG" | copy_data$type_cross=="SC"),]
 copy_data<-t[!is.na(t$Avg_Lead_Bz), ]
 copy_data$type_cross<-factor(copy_data$type_cross)
 copy_data$id<-seq.int(nrow(copy_data))
-  
 cassini.train_unscaled<-copy_data%>% filter(type_cross=='NE')%>%sample_n(150)%>%rbind(copy_data%>%filter(type_cross=='BS')%>%sample_n(100))%>%rbind(copy_data%>%filter(type_cross=='MP')%>%sample_n(100))
 cassini.train_unscaled$type_cross<-as.factor(cassini.train_unscaled$type_cross)
 cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
@@ -1263,7 +1180,6 @@ cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
 cassini.train_unscaled<-dplyr::select(cassini.train_unscaled,-id)
 
 ## Scaling the data
-
 cassini.train_scaled<-cassini.train_unscaled%>%mutate_if(is.numeric,scale)
 means <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), mean)
 sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), sd)
@@ -1271,10 +1187,7 @@ means <- matrix(unlist(means), ncol = 218, byrow = FALSE)
 sds <- matrix(unlist(sds), ncol = 218, byrow = FALSE)
 
 ## Normalizing the TEST DATASET
-
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -1282,50 +1195,41 @@ for(col in c(1:dim(cassini.test_scaled)[2])){
 }
 cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
-
-
 cassini.train_scaled<-cassini.train_scaled%>%mutate(event_occured=ifelse(type_cross=='NE',0,ifelse(type_cross=='BS',1,ifelse(type_cross=='MP',2,0))))
 cassini.train_scaled$event_occured<-as.factor(cassini.train_scaled$event_occured)
 cassini.train_scaled <- dplyr::select(cassini.train_scaled,-c(type_cross,dirn_cross))
-
 cassini.test_scaled<-cassini.test_scaled%>%mutate(event_occured=ifelse(type_cross=='NE',0,ifelse(type_cross=='BS',1,ifelse(type_cross=='MP',2,0))))
 cassini.test_scaled$event_occured<-as.factor(cassini.test_scaled$event_occured)
 cassini.test_scaled <- dplyr::select(cassini.test_scaled,-c(type_cross,dirn_cross))
-
 
 # Setting alpha = 1 implements lasso regression
 x_tr<-as.matrix(dplyr::select(cassini.train_scaled,-event_occured))
 y_tr<-as.matrix(dplyr::select(cassini.train_scaled,event_occured))
 x_te<-as.matrix(dplyr::select(cassini.test_scaled,-event_occured))
 y_te<-as.matrix(dplyr::select(cassini.test_scaled,event_occured))
-
 lambdas <- 10^seq(2, -3, by = -.1)
-
 lasso_reg <- lasso_reg <- cv.glmnet(x_tr, y_tr, alpha = 1, lambda = lambdas, nfolds = 5, family="multinomial")
 
 # Best 
 lambda_best <- lasso_reg$lambda.min 
 
 ###Lasso
-
 lasso_model <- glmnet(x_tr, y_tr, alpha = 1, lambda = lambda_best, family="multinomial")
 predictions_train <- predict(lasso_model, s = lambda_best, newx = x_tr,type="class")
-#eval_results(y_train, predictions_train, train)
-
 predictions_test <- predict(lasso_model, s = lambda_best, newx = x_te,type="class")
 conf_mat.lsmodel2<-confusionMatrix(table(predictions_test,y_te))
 conf_mat.lsmodel2
 ```
 
 
-The accuracy of the Lasso Regression Model with Dataset 4 is about `r round(conf_mat.lsmodel2$overall['Accuracy']*100,1)`% . The sensitivity of each class is `r round(conf_mat.lsmodel2$byClass['Class: 1','Sensitivity']*100,3)`% , `r round(conf_mat.lsmodel2$byClass['Class: 2','Sensitivity']*100,3)`%  and `r round(conf_mat.lsmodel2$byClass['Class: 0','Sensitivity']*100,3)`% for the classes Bow Shock, Magnetopause and No Events occurred respectively. When compared to dataset 3 Lasso regression Model, this model misclassified more `NE` points but classified `BS` events more accurately.
+The accuracy of this Lasso Regression Model which was trained with Dataset 4 is about `r round(conf_mat.lsmodel2$overall['Accuracy']*100,1)`% . The sensitivity values are `r round(conf_mat.lsmodel2$byClass['Class: 1','Sensitivity']*100,3)`% , `r round(conf_mat.lsmodel2$byClass['Class: 2','Sensitivity']*100,3)`%  and `r round(conf_mat.lsmodel2$byClass['Class: 0','Sensitivity']*100,3)`% for the classes Bow Shock, Magnetopause and No Events occurred respectively. When compared to model trained with Dataset 3, this model misclassified more `NE` points.
 
 
 \newpage
 
 __Summary of Dataset 3 : Without Lead Variables__ 
 
-In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points which were sampled from the Dataset 3. The table Shown below is the Confusion matrix of the model with this dataset.
+In this dataset there are only 107 predictors which means half of the variables were removed so, the train dataset contains 100 NE points, 100 BS Points and 100 MP points which were sampled from the Dataset 3. The table shown below is the Confusion matrix of the model with this dataset.
 
 ```{r , echo=FALSE, message=FALSE,warning=FALSE}
 
@@ -1341,12 +1245,7 @@ cassini.test_unscaled<-copy_data[-cassini.train_unscaled$id,]
 cassini.test_unscaled<-dplyr::select(cassini.test_unscaled,-id)
 cassini.train_unscaled<-dplyr::select(cassini.train_unscaled,-id)
 
-
-
-
-
 ## Scaling the data
-
 cassini.train_scaled<-cassini.train_unscaled%>%mutate_if(is.numeric,scale)
 means <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), mean)
 sds <- lapply(dplyr::select(cassini.train_unscaled,-c(type_cross,dirn_cross)), sd)
@@ -1355,10 +1254,7 @@ sds <- matrix(unlist(sds), ncol = 107, byrow = FALSE)
 
 
 ## Normalizing the TEST DATASET
-
-
 cassini.test_scaled<-dplyr::select(cassini.test_unscaled,-c(type_cross,dirn_cross))
-
 for(col in c(1:dim(cassini.test_scaled)[2])){
   temp<-(cassini.test_scaled[,col]-means[1,col])/sds[1,col]
   cassini.test_scaled[,col]<-as.matrix(temp)
@@ -1366,51 +1262,41 @@ for(col in c(1:dim(cassini.test_scaled)[2])){
 }
 cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 cassini.test_scaled$dirn_cross<-cassini.test_unscaled$dirn_cross
-
-
 cassini.train_scaled<-cassini.train_scaled%>%mutate(event_occured=ifelse(type_cross=='NE',0,ifelse(type_cross=='BS',1,ifelse(type_cross=='MP',2,0))))
 cassini.train_scaled$event_occured<-as.factor(cassini.train_scaled$event_occured)
 cassini.train_scaled <- dplyr::select(cassini.train_scaled,-c(type_cross,dirn_cross))
-
 cassini.test_scaled<-cassini.test_scaled%>%mutate(event_occured=ifelse(type_cross=='NE',0,ifelse(type_cross=='BS',1,ifelse(type_cross=='MP',2,0))))
 cassini.test_scaled$event_occured<-as.factor(cassini.test_scaled$event_occured)
 cassini.test_scaled <- dplyr::select(cassini.test_scaled,-c(type_cross,dirn_cross))
-
 
 # Setting alpha = 1 implements lasso regression
 x_tr<-as.matrix(dplyr::select(cassini.train_scaled,-event_occured))
 y_tr<-as.matrix(dplyr::select(cassini.train_scaled,event_occured))
 x_te<-as.matrix(dplyr::select(cassini.test_scaled,-event_occured))
 y_te<-as.matrix(dplyr::select(cassini.test_scaled,event_occured))
-
 lambdas <- 10^seq(2, -3, by = -.1)
-
 lasso_reg <- lasso_reg <- cv.glmnet(x_tr, y_tr, alpha = 1, lambda = lambdas, nfolds = 5, family="multinomial")
 
 # Best 
 lambda_best <- lasso_reg$lambda.min 
 
 ###Lasso
-
 lasso_model <- glmnet(x_tr, y_tr, alpha = 1, lambda = lambda_best, family="multinomial")
 predictions_train <- predict(lasso_model, s = lambda_best, newx = x_tr,type="class")
-#eval_results(y_train, predictions_train, train)
-
 predictions_test <- predict(lasso_model, s = lambda_best, newx = x_te,type="class")
 conf_mat.lsmodel3<-confusionMatrix(table(predictions_test,y_te))
 conf_mat.lsmodel3
 ```
 
-In this model we are only using the Lag variables of the Dataset 3 which means we are only taking the 15minutes before data of each datapoints into consideration. 
+This model failed to classify majority of Magnet pause events when compared to other Lasso Regression models mentioned in this section. The accuracy of this Lasso Regression Model which was trained with Dataset 3 without lead variables is about `r round(conf_mat.lsmodel3$overall['Accuracy']*100,1)`% .
 
 \newpage
 ## Overall Results
 
-DIfferent models were fitted by using the datasets that were derived from the raw datasets. All the models were trained by using the balanced datasets that were sampled from the derived dataset that was intended for the model. All the remaining data points in that dataset were used as the Test Dataset to find the accuracy and Sensitivity of the model.
+DIfferent models were fitted by using the datasets that were derived from the raw datasets. All the models were trained by using the balanced datasets that were sampled from the derived dataset that was intended for the model. Rest of the data points in that dataset were used as the test Dataset to find the accuracy and Sensitivity of the model.
 
 
 \begin{center}
-\captionof{table}{Overall Results: Model Selection}
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
 Model Used & Dataset Used &  Accuracy & Sensitivity BS  & Sensitivity MP  \\ \hline
@@ -1427,12 +1313,14 @@ LSR Model  & Dataset 4   & `r round(conf_mat.lsmodel2$overall['Accuracy']*100,1)
 LSR Model  & Dataset 3 without Lead Variables   & `r round(conf_mat.lsmodel3$overall['Accuracy']*100,1)` &`r round(conf_mat.lsmodel3$byClass['Class: 1','Sensitivity']*100,1)` & `r round(conf_mat.lsmodel3$byClass['Class: 2','Sensitivity']*100,1)`  \\ \hline
 
 \end{tabular}
+\captionof{table}{Overall Results: Model Selection}
+
 \end{center}
 
 *   RF :- Random Forest Model
 *   LSR:- Lasso Regression Model
 
-From Table 11, we can say that some of the models have higher accuracy but there are lot of misclassification when it comes to the Magnetopause and Bow shock classes. It may be due to very less number of datapoints in that particular classes. Eventhough we took the dataset of the entire year 2005 the Cassini spacecraft crossed the boundaries of Magnetopause and Bow shock regions very few times. When compared to Lasso Regression Model we can say that Random Forest model performed better in terms of accuracy and Classification of NE Points. Random Forrest model with Dataset 3 has better accuracy but they misclassified most datapoints that are of class Bow Shock and Magnetopause events. 
+From Table 11, we can say that some of the models have higher accuracy but there are lot of misclassification when it comes to the Magnetopause and Bow shock classes. It may be due to very less number of datapoints in that particular classes. Eventhough we took the dataset of the entire year 2005 the Cassini spacecraft crossed the boundaries of Magnetopause and Bow shock regions very few times. When compared to Lasso Regression Model we can say that Random Forest model performed better in terms of accuracy and Classification of NE Points. Random Forest model with Dataset 3 has better accuracy but they misclassified most datapoints that are of class Bow Shock and Magnetopause events. 
 
 
 \newpage
@@ -1441,7 +1329,7 @@ From Table 11, we can say that some of the models have higher accuracy but there
 
 This project aimed  to classify the Bow shock and Magnetopause boundaries based on the Magnetometer data collected by Cassini spacecraft. New datasets were derived from the raw datasets which was explained in the Dataset explanation section. Data visualizations were done on all the derived datasets and those analysis shown that the dataset was highly imbalanced.In section 6 of this report, we have explained about the results of different Logistic Regression models that were used to find the significance of predictors in each datasets. Based on these results, `Dataset 4` performed better for both classifying the Bow Shock against other events and Magnetopause versus other events. But in the random forest models  which were fitted with all the derived datasets for classifying three categories `BS`,`MP` and `NE` were not performed well especially in classifying the `BS` and `MP` events. The performance of Lasso regression models with `multinomial` family  were very poor when compared to the random forest models.
 
-Eventhough there was some magnetic field strength pattern before or after each type of events, it is hard to classify the boundary crossings with the dataset that is currently provided because it contains only very less datapoints of Bow Shock and magnetopause events in the dataset.It may be because we have only considered the magnetometer data of the year 2005 which itself consist about 494000 data points. Additional studies are required by using an extended dataset which consist of entire cassini space mission to classify the boundary crossings by using this dataset.Recurrent Neural Networks foe classification can be also adopted to classify these boundary crossings but it was outside the scope of this thesis. 
+Eventhough there was some magnetic field strength pattern before or after each type of events, it is hard to classify the boundary crossings with the dataset that is currently provided because it contains only very less datapoints of Bow Shock and magnetopause events in the dataset.It may be because we have only considered the magnetometer data of the year 2005 which itself consist about 494000 data points. Additional studies are required by using an extended dataset which consist of entire cassini space mission to classify the boundary crossings by using this dataset.Recurrent Neural Networks can be also adopted to classify these boundary crossings but it was outside the scope of this thesis. 
 
 
 \newpage
@@ -1453,8 +1341,20 @@ Eventhough there was some magnetic field strength pattern before or after each t
 \newpage
 
 # Appendix
-## Supporting code
 
+## Supporting code & Supporting Files Link
+
+\bigskip
+__GitHub Repository__:https://github.com/matty1203/BowShockClassifier
+
+\bigskip
+__Dataset OneDrive Link__: https://maynoothuniversity-my.sharepoint.com/:f:/r/personal/mathews_philipvenattu_2021_mumail_ie/Documents/Thesis%20(20250487)%20Dataset?csf=1&web=1&e=AV79IL 
+
+\bigskip
+
+__SUPPORTING FILES__:https://maynoothuniversity-my.sharepoint.com/:u:/g/personal/mathews_philipvenattu_2021_mumail_ie/EX-kFO26xqxDtPuKHDgyW-cB7Ma5-g4OHuwQYag9Xmo0jw?e=e9rV5l
+
+\bigskip
 __Including Libraries and Reading the Datasets__
 ```{r, eval= FALSE}
 suppressMessages(library(ggplot2))
@@ -1989,7 +1889,7 @@ cassini.test_scaled$type_cross<-cassini.test_unscaled$type_cross
 ## Removing dirn_cross and creating new variable `new_trainData`.
 new_trainData<-dplyr::select(cassini.train_scaled,-dirn_cross)
 new_testData<-cassini.test_scaled
-#### Random Forrest Model Training and Confusion Matrix
+#### Random forest Model Training and Confusion Matrix
 cassini.rfmodel1 <- ranger(type_cross ~ ., data = new_trainData)
 new_testData$pred<-predict(cassini.rfmodel1,data = new_testData)$predictions
 conf_mat.rfmodel1<-confusionMatrix(new_testData$pred, new_testData$type_cross)
